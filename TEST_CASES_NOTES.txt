@@ -1,0 +1,15 @@
+
+Nos casos de teste o E[i] = (2^i)*i na verdade é E[i] = (2^(i-1))*(i-1)
+
+Complexidade Heap:
+
+Eixo Y -> I[i]/E[i] = empírico sobre teórica
+Eixo Y -> (T[i+1] - T[i])/E[i] = Pode ser substituído por T[i]/E[i] (Divisão mesmo)
+Eixo X -> Todos batendo com o outro eixo de Número de número de inserções.
+
+Complexidade Dijkstra:
+
+Eixo Y -> T[i]/((n + m)*log(n)) = Dividido
+Eixo X -> m arestas, n vertices respectivamente para o caso de teste 1 e 2
+
+Relatar tempo e uso de memória no Dijkstra para o grafo de NY e EUA

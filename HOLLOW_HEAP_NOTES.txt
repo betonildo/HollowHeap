@@ -1,0 +1,1 @@
+The data structure Node has a pointer to item, where real data resides on, and the Item has a pointer to Node because of internal operations of the hollow heaps
