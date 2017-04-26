@@ -18,6 +18,7 @@ extern "C" {
         n->nextSibling = NULL;
         n->rank = 0;
         n->N = 1; // metadata for delete-min con
+        e->node = n; // e->node has to point to this node
         return n;
     }
 
@@ -51,8 +52,11 @@ extern "C" {
     }
 
     Node* delete_element(Item* e, Node* h) {
-        free(e->node->item);
-        e->node->item = NULL;
+        if (e->node->item != NULL) {
+            // free(e->node->item);
+            e->node->item = NULL;
+        }
+
         if (e->node == h)
             return delete_min(h);
         return h;
@@ -66,7 +70,10 @@ extern "C" {
         // defining M is into colorary definition
         // TODO:    to reduce the number N, used to discover M, each hollowNode that is
         //          removed from heap, decrements one
-        U32 M = ceil(logBase(h->N, PHI));
+        double phi = PHI;
+        double lres = logBase(h->N, phi);
+        U32 M = ceil(lres) + 1;
+        Make2Pot(&M);
 
         Node** R = (Node**) malloc(sizeof(Node*) * M);
 
@@ -75,13 +82,12 @@ extern "C" {
         U32 SUBM = 0;
         do {
             Node* rn = r->nextSibling;
-            if (rn == NULL) break;
             SUBM += link_heap(r, R);
             r = rn;
+            h = NULL;
         }
         while(r != h);
 
-        h = NULL;
 
         for (U32 i = 0; i < M; i++) {
             if (R[i] != NULL) {
@@ -89,7 +95,8 @@ extern "C" {
                 h = meld(h, R[i]);
             }
         }
-
+        // free R of Nodes 
+        free(R);
         // update number of nodes eliminated/removed
         h->N = MAX(0, h->N - SUBM);
 
@@ -120,8 +127,8 @@ extern "C" {
                 newM += link_heap(r, R);
                 r = rn;
             }
-            free(h);
-            h = NULL;
+            // free(h);
+            // h = NULL;
             return newM;
         }
         else {

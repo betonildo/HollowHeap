@@ -50,8 +50,8 @@ public:
             // get next and delete the minimun (deletemin* variant name)
             n_deletes += 1;
             Item* e = findmin(heap);
-            unsigned long u = e->distance;
-            heap = delete_min(heap);
+            unsigned long u = e->node->key;//distance;
+            heap = delete_element(e, heap);            
             
             // if this vertice was not visited yet, look for each neibor 
             // and verify the distance to the origin
