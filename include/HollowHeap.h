@@ -23,13 +23,14 @@ struct Node {
 
 struct Item {
     Node* node;
+    U32 distance;
 };
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-    Item* make_element();
+    Item* make_element(U32 distance);
     Node* make_heap(Item* e, U32 key); //O(1)
     Item* findmin(Node* h); // O(1)
     Node* getmin(Node* h); //O(1)
@@ -38,7 +39,7 @@ extern "C" {
     Node* delete_element(Item* e, Node* h); // log(N)
     Node* delete_min(Node* h); // log(N)
     Node* meld(Node* h1, Node* h2); //O(1)
-    void link_heap(Node* h, Node** R); // log(N)
+    U32 link_heap(Node* h, Node** R); // log(N)
     Node* link(Node* t1, Node* t2); //O(1)
     Node* makechild(Node* w, Node* l); //O(1)
 

@@ -1,0 +1,1 @@
+g++ -g -Wall src/main.cpp src/HollowHeap.cc -o dijkstra -I"include/" -lm

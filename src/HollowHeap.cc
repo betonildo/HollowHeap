@@ -4,8 +4,10 @@
 extern "C" {
 #endif
 
-    Item* make_element() {
-        return (Item*)malloc(sizeof(Item));
+    Item* make_element(U32 distance) {
+        Item* item = (Item*)malloc(sizeof(Item));
+        item->distance = distance;
+        return item;
     }
 
     Node* make_heap(Item* e, U32 key) {
@@ -15,7 +17,7 @@ extern "C" {
         n->firstChild = NULL;
         n->nextSibling = NULL;
         n->rank = 0;
-        n->N = 0; // metadata for delete-min con
+        n->N = 1; // metadata for delete-min con
         return n;
     }
 
@@ -69,9 +71,12 @@ extern "C" {
         Node** R = (Node**) malloc(sizeof(Node*) * M);
 
         Node* r = h;
+
+        U32 SUBM = 0;
         do {
             Node* rn = r->nextSibling;
-            link_heap(r, R);
+            if (rn == NULL) break;
+            SUBM += link_heap(r, R);
             r = rn;
         }
         while(r != h);
@@ -84,6 +89,9 @@ extern "C" {
                 h = meld(h, R[i]);
             }
         }
+
+        // update number of nodes eliminated/removed
+        h->N = MAX(0, h->N - SUBM);
 
         return h;
     }
@@ -101,17 +109,20 @@ extern "C" {
         else return h2;
     }
 
-    void link_heap(Node* h, Node** R) {
+    U32 link_heap(Node* h, Node** R) {
         // h is hollow
+        U32 newM = 0;
         if (h->item == NULL) {
+            
             Node* r = h->firstChild;
             while (r != NULL) {
                 Node* rn = r->nextSibling;
-                link_heap(r, R);
+                newM += link_heap(r, R);
                 r = rn;
             }
             free(h);
             h = NULL;
+            return newM;
         }
         else {
             U32 i = h->rank;
@@ -122,6 +133,8 @@ extern "C" {
             }
             R[i] = h;
         }
+
+        return newM;
     }
 
     Node* link(Node* t1, Node* t2) {

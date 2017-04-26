@@ -2,13 +2,12 @@
 #include <map>
 
 #include <iostream>
-#include "NHeap.h"
 #include "Edge.h"
+#include "HollowHeap.h"
 
 #ifndef GRAPH_H
 #define GRAPH_H
 
-template<class HeapImpl>
 class Graph {
 
 public:
@@ -43,15 +42,16 @@ public:
         distances[origin].distanceTo = 0;
         
         // instantiate the heap and insert the vertice origin as starting point
-        HeapImpl<Edge> edgesHeap(m_aridity);
-        edgesHeap.insert({origin, 0});
+        Item* e = make_element(0);
+        Node* heap = make_heap(e, origin);
         
-        while (!edgesHeap.empty()) {
+        while (findmin(heap) != NULL) {
             
             // get next and delete the minimun (deletemin* variant name)
             n_deletes += 1;
-            Edge e = edgesHeap.deleteMin();
-            unsigned long u = e.to;
+            Item* e = findmin(heap);
+            unsigned long u = e->distance;
+            heap = delete_min(heap);
             
             // if this vertice was not visited yet, look for each neibor 
             // and verify the distance to the origin
@@ -70,7 +70,7 @@ public:
                         distances[v].infinity = false;
                         distances[v].distanceTo = cost;
                         n_inserts += 1;
-                        edgesHeap.insert({v, cost});
+                        heap = insert(make_element(cost), v, heap);
                     }
                     // else if we already have an instance of the vertice on the heap,
                     // we must update the distance to origin reling on distances pre
@@ -78,7 +78,6 @@ public:
                     else if (cost < distances[v].distanceTo) {
                         distances[v].distanceTo = cost;
                         n_updates += 1;
-                        edgesHeap.update({v, cost});
                     }
                 }
             }
@@ -95,7 +94,7 @@ public:
         
         printf("%d ", ni);
         for(auto neibor : m_graph[ni]) {
-            printf("-(%d)-> ", neibor.weight);
+            printf("-(%ld)-> ", neibor.weight);
             print(neibor.to);
         }
 

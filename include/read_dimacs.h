@@ -25,6 +25,7 @@ void read_dimacs(std::istream& in, Graph& g) {
             unsigned u,v,w;
             char ac;
             arc >> ac >> u >> v >> w;
+            std::cout << u << " " << v << " " << w << std::endl;
             // processar arco (u,v) com peso w
             g.set(u, v, w);
             i++;

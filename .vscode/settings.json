@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "cmath": "cpp",
+        "xutility": "cpp",
+        "limits": "cpp"
+    }
+}
