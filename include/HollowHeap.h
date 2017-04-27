@@ -1,19 +1,10 @@
-#include "definitions.h"
 #include <stdlib.h>
 #include <math.h>
 
 #ifndef HOLLOWHEAP_H
 #define HOLLOWHEAP_H
 
-#define MAX(a, b) (a) < (b) ? (b) : (a)
-#define PHI ((1.0 + sqrt(5.0)) / 2.0)
-#define logBase(x, b) log((double)(x)) / log((double)(b))
-#define Make2Pot(x) {\
-        double ___AXHOADISJDOJQWDQ_L = logBase((*x), 2); \
-        double ___AXHAOSDJSODIJOQW_intpart; \
-        double ___AXHDASIUHDIUWQHD_fractpart = modf (___AXHOADISJDOJQWDQ_L, &___AXHAOSDJSODIJOQW_intpart); \
-        (*x) = ___AXHDASIUHDIUWQHD_fractpart > 0 ? pow(2, ceil(___AXHOADISJDOJQWDQ_L)) : (*x); \
-} \
+#include "definitions.h"
 
 typedef struct Item Item;
 typedef struct Node Node;
@@ -29,14 +20,14 @@ struct Node {
 
 struct Item {
     Node* node;
-    U32 distance;
+    U32 vertice;
 };
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-    Item* make_element(U32 distance);
+    Item* make_element(U32 vertice);
     Node* make_heap(Item* e, U32 key); //O(1)
     Item* findmin(Node* h); // O(1)
     Node* getmin(Node* h); //O(1)
