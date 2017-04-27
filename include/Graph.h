@@ -1,29 +1,30 @@
-#include <vector>
-#include <map>
-
-#include <iostream>
-#include "Edge.h"
-#include "HollowHeap.h"
-
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <vector>
+#include <map>
+#include <queue>
+#include <iostream>
+#include "EdgeDistance.h"
+#include "HollowHeap.h"
+
 class Graph {
+
+    struct Edge {
+        U32 to;
+        U32 weight;
+    };
 
 public:
     Graph() {
         m_graph.clear();
     }
-
-    void setHeapAridity(unsigned long aridity) {
-        m_aridity = aridity;
-    }
     
-    void setSize(unsigned long numberOfElements) {
+    void setSize(U32 numberOfElements) {
         m_numberOfElements = numberOfElements + 1;
     }
     
-    void set(unsigned long origin, unsigned long dest, unsigned long weight) {
+    void set(U32 origin, U32 dest, U32 weight) {
         m_graph[origin].push_back({dest, weight});
     }
     
@@ -56,9 +57,9 @@ public:
             
             // if this vertice was not visited yet, look for each neibor 
             // and verify the distance to the origin
-            if (distances[u].visited == false) {                
+            if (distances[u].visited == false) {
                 distances[u].visited = true;
-                
+
                 for(auto neibor : m_graph[u]) {
                     
                     unsigned long v = neibor.to;
@@ -95,20 +96,38 @@ public:
         return m_graph.rbegin()->first;
     }
 
-    void print(unsigned ni) {
-        
-        printf("%d ", ni);
+    void printNeiborsOf(U32 ni) {
         for(auto neibor : m_graph[ni]) {
-            printf("-(%ld)-> ", neibor.weight);
-            print(neibor.to);
+            printf("%d\n", neibor.to);
         }
-
-        if (m_graph[ni].size() == 0)
-            printf("\n");
     }
 
+    bool* visiteds = NULL;
 
+    void print(unsigned ni) {
+        visiteds = new bool[m_numberOfElements];
+        for(U32 i = 0; i < m_numberOfElements; i++) 
+            visiteds[i] = false;
 
+        std::queue<U32> qNodes;
+        qNodes.push(ni);
+        while(!qNodes.empty()) {
+            ni = qNodes.front();
+            qNodes.pop();
+            printf("%d ", ni);
+            visiteds[ni] = true;
+            for(auto neibor : m_graph[ni]) {
+                printf("-(%d)-> ", neibor.weight);
+                if (!visiteds[neibor.to]){
+                    visiteds[neibor.to] = true;
+                    printf("%d ", neibor.to);
+                    qNodes.push(neibor.to);
+                }
+            }
+            printf("\n");       
+        }
+    }
+    
     unsigned long getNumberOfInserts() {
         return n_inserts;
     }
@@ -122,7 +141,6 @@ public:
     }
 
 private:
-    unsigned long m_aridity;
     unsigned long m_numberOfElements;
     std::map<unsigned long, std::vector<Edge> > m_graph;
 

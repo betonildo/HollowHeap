@@ -3,7 +3,8 @@
 #include "read_dimacs.h"
 #include <iostream>
 #include <cassert>
-#include <fstream>
+
+#include <unistd.h>
 
 int main(int argc, char** argv) {
 
@@ -12,18 +13,13 @@ int main(int argc, char** argv) {
     int dest = atoi(argv[2]);
 
     Graph g;
-    if (argc > 3) {
-        std::ifstream f(argv[3]);
-        read_dimacs(f, g);
-    }
-    else {
-        read_dimacs(std::cin, g);
-    }
-    
+    if (argc > 3) read_dimacs(argv[3], g);
+    else read_dimacs(std::cin, g);
+
     U32 elapsed = 0;
     EdgeDistance ed;
     MeasureMS(&elapsed, ed = g.dijkstra(origin, dest));
     std::cout << ed << std::endl;
-
+    // std::cout << elapsed << " ms" << std::endl;
     return 0;
 }

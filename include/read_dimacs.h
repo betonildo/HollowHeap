@@ -1,5 +1,17 @@
+#ifndef READ_DIMACS_H
+#define READ_DIMACS_H
+
 #include <sstream>
 #include <iostream>
+#include <fstream>
+
+void read_dimacs(std::istream& in, Graph& g);
+void read_dimacs(char* path, Graph& g);
+
+void read_dimacs(char* path, Graph& g) {
+    std::ifstream f(path);
+    read_dimacs(f, g);
+}
 
 void read_dimacs(std::istream& in, Graph& g) {
     
@@ -15,7 +27,6 @@ void read_dimacs(std::istream& in, Graph& g) {
     g.setSize(n);
     
     unsigned i = 0;
-    
     while (i < m) {
         
         getline(in, line);
@@ -25,10 +36,12 @@ void read_dimacs(std::istream& in, Graph& g) {
             unsigned u,v,w;
             char ac;
             arc >> ac >> u >> v >> w;
-            std::cout << u << " " << v << " " << w << std::endl;
+            // std::cout << u << " " << v << " " << w << std::endl;
             // processar arco (u,v) com peso w
             g.set(u, v, w);
             i++;
         }
     }
 }
+
+#endif /*READ_DIMACS_H*/

@@ -7,7 +7,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/dijkstra",
-            "args": ["1", "4", "test/10_20_"],
+            "args": ["13", "48", "test/USA-road-d.NY.gr"],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
             "environment": [],
