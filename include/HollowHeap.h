@@ -5,6 +5,7 @@
 #define HOLLOWHEAP_H
 
 #include "definitions.h"
+#include "utils.h"
 
 typedef struct Item Item;
 typedef struct Node Node;

@@ -1,13 +1,13 @@
+#include "utils.h"
 #include "Graph.h"
 #include "read_dimacs.h"
 #include <iostream>
 #include <cassert>
-#include <chrono>
 #include <fstream>
 
 int main(int argc, char** argv) {
 
-    // assert(argc >= 3);
+    assert(argc >= 3);
     int origin = atoi(argv[1]);
     int dest = atoi(argv[2]);
 
@@ -20,12 +20,10 @@ int main(int argc, char** argv) {
         read_dimacs(std::cin, g);
     }
     
-    // inicio
-    auto start = std::chrono::system_clock::now();
-    EdgeDistance ed = g.dijkstra(origin, dest);
-    auto end = std::chrono::system_clock::now();
-    U32 elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    std::cout << ed << std::endl;        
+    U32 elapsed = 0;
+    EdgeDistance ed;
+    MeasureMS(&elapsed, ed = g.dijkstra(origin, dest));
+    std::cout << ed << std::endl;
 
     return 0;
 }

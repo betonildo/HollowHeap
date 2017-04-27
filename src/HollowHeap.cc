@@ -76,6 +76,9 @@ extern "C" {
         Make2Pot(&M);
 
         Node** R = (Node**) malloc(sizeof(Node*) * M);
+        // init all R's
+        for (U32 i = 0; i < M; i++)
+            R[i] = NULL;
 
         Node* r = h;
 
@@ -87,7 +90,7 @@ extern "C" {
         }
         while(r != h && r != NULL);
 
-        // h = NULL;
+        h = NULL;
         for (U32 i = 0; i < M; i++) {
             if (R[i] != NULL) {
                 R[i]->nextSibling = R[i];
@@ -97,8 +100,7 @@ extern "C" {
         // free R of Nodes 
         free(R);
         // update number of nodes eliminated/removed
-        h->N = MAX(0, h->N - SUBM);
-
+        if (h) h->N = MAX(0, h->N - SUBM);
         return h;
     }
 
@@ -127,10 +129,8 @@ extern "C" {
                 r = rn;
             }
             
-            if (h) {
-                free(h);
-                h = NULL;
-            }
+            if (h) free(h);
+            h = NULL;
             return newM;
         }
         else {

@@ -32,18 +32,19 @@ public:
         // instantiate distances calculated
         EdgeDistance distances[m_numberOfElements];
 
-        // if some over or under flow occurs, the distance is infinity
-        if (dest >= m_numberOfElements || origin >= m_numberOfElements || dest < 0 || origin < 0) return distances[0];
-        
         // clear insert, update and delete-min counters
         m_clearCounters();
         
         // The distance to it self is 0
         distances[origin].distanceTo = 0;
+        distances[origin].infinity = false;
+        
+        // if some over or under flow occurs, the distance is infinity
+        if (dest == origin) return distances[dest];
+        if (dest >= m_numberOfElements || origin >= m_numberOfElements || dest < 0 || origin < 0) return EdgeDistance();
         
         // instantiate the heap and insert the vertice origin as starting point
-        Item* e = make_element(origin);
-        Node* heap = make_heap(e, 0);
+        Node* heap = make_heap(make_element(origin), 0);
         
         while (findmin(heap) != NULL) {
             
@@ -70,7 +71,8 @@ public:
                         distances[v].infinity = false;
                         distances[v].distanceTo = cost;
                         n_inserts += 1;
-                        heap = insert(make_element(v), cost, heap);
+                        if (!heap) heap = make_heap(make_element(v), cost);
+                        else heap = insert(make_element(v), cost, heap);
                     }
                     // else if we already have an instance of the vertice on the heap,
                     // we must update the distance to origin reling on distances pre
@@ -78,7 +80,8 @@ public:
                     else if (cost < distances[v].distanceTo) {
                         distances[v].distanceTo = cost;
                         n_updates += 1;
-                        heap = decrease_key(e, cost, heap);
+                        if (!heap) heap = make_heap(make_element(v), cost);
+                        else heap = decrease_key(e, cost, heap);
                     }
                 }
             }
