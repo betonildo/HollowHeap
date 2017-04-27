@@ -4,9 +4,9 @@
 extern "C" {
 #endif
 
-    Item* make_element(U32 distance) {
+    Item* make_element(U32 vertice) {
         Item* item = (Item*)malloc(sizeof(Item));
-        item->distance = distance;
+        item->vertice = vertice;
         return item;
     }
 
@@ -15,7 +15,7 @@ extern "C" {
         n->item = e;
         n->key = key;
         n->firstChild = NULL;
-        n->nextSibling = NULL;
+        n->nextSibling = n;
         n->rank = 0;
         n->N = 1; // metadata for delete-min con
         e->node = n; // e->node has to point to this node
@@ -66,7 +66,7 @@ extern "C" {
         if (h == NULL) return NULL;
         free(h->item);
         h->item = NULL;
-
+        
         // defining M is into colorary definition
         // TODO:    to reduce the number N, used to discover M, each hollowNode that is
         //          removed from heap, decrements one
@@ -84,11 +84,10 @@ extern "C" {
             Node* rn = r->nextSibling;
             SUBM += link_heap(r, R);
             r = rn;
-            h = NULL;
         }
-        while(r != h);
+        while(r != h && r != NULL);
 
-
+        // h = NULL;
         for (U32 i = 0; i < M; i++) {
             if (R[i] != NULL) {
                 R[i]->nextSibling = R[i];
@@ -127,8 +126,11 @@ extern "C" {
                 newM += link_heap(r, R);
                 r = rn;
             }
-            // free(h);
-            // h = NULL;
+            
+            if (h) {
+                free(h);
+                h = NULL;
+            }
             return newM;
         }
         else {
