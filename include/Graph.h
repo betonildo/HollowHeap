@@ -42,16 +42,16 @@ public:
         distances[origin].distanceTo = 0;
         
         // instantiate the heap and insert the vertice origin as starting point
-        Item* e = make_element(0);
-        Node* heap = make_heap(e, origin);
+        Item* e = make_element(origin);
+        Node* heap = make_heap(e, 0);
         
         while (findmin(heap) != NULL) {
             
             // get next and delete the minimun (deletemin* variant name)
             n_deletes += 1;
             Item* e = findmin(heap);
-            unsigned long u = e->node->key;//distance;
-            heap = delete_element(e, heap);            
+            unsigned long u = e->vertice;
+            heap = delete_min(heap);
             
             // if this vertice was not visited yet, look for each neibor 
             // and verify the distance to the origin
@@ -70,7 +70,7 @@ public:
                         distances[v].infinity = false;
                         distances[v].distanceTo = cost;
                         n_inserts += 1;
-                        heap = insert(make_element(cost), v, heap);
+                        heap = insert(make_element(v), cost, heap);
                     }
                     // else if we already have an instance of the vertice on the heap,
                     // we must update the distance to origin reling on distances pre
@@ -78,9 +78,11 @@ public:
                     else if (cost < distances[v].distanceTo) {
                         distances[v].distanceTo = cost;
                         n_updates += 1;
+                        heap = decrease_key(e, cost, heap);
                     }
                 }
             }
+            
         }
         
         return distances[dest];
