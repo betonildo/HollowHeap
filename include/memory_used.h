@@ -3,6 +3,7 @@
 
 #ifdef __linux__
     #include <sys/sysinfo.h>
+    #include <unistd.h>
 #endif
 
 #ifdef __APPLE__
@@ -19,6 +20,8 @@
 /// The amount of memory currently being used by this process, in bytes.
 /// By default, returns the full virtual arena, but if resident=true,
 /// it will report just the resident set in RAM (if supported on that OS).
+size_t memory_used (bool resident);
+
 size_t memory_used (bool resident=false)
 {
 #if defined(__linux__)
@@ -31,10 +34,10 @@ size_t memory_used (bool resident=false)
     size_t size = 0;
     FILE *file = fopen("/proc/self/statm", "r");
     if (file) {
-        unsigned long vm = 0;
-        fscanf (file, "%ul", &vm);  // Just need the first num: vm size
+        unsigned int vm = 0;
+        fscanf (file, "%ui", &vm);  // Just need the first num: vm size
         fclose (file);
-       size = (size_t)vm * getpagesize();
+        size = (size_t)vm * getpagesize();
     }
     return size;
 

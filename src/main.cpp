@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "Graph.h"
+#include "HollowHeapGraph.h"
 #include "read_dimacs.h"
 #include <iostream>
 #include <cassert>
@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
     int origin = atoi(argv[1]);
     int dest = atoi(argv[2]);
 
-    Graph g;
+    HollowHeap::Graph g;
     if (argc > 3) read_dimacs(argv[3], g);
     else read_dimacs(std::cin, g);
 

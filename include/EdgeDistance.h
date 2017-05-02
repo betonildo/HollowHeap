@@ -1,5 +1,5 @@
-#ifndef EDGE_H
-#define EDGE_H
+#ifndef EDGEDISTANCE_H
+#define EDGEDISTANCE_H
 
 #include <iostream>
 #include "definitions.h"
@@ -22,4 +22,4 @@ struct EdgeDistance {
     }
 };
 
-#endif /*EDGE_H*/
+#endif /*EDGEDISTANCE_H*/

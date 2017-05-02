@@ -1,4 +1,3 @@
-
 #ifndef HOLLOWHEAP_H
 #define HOLLOWHEAP_H
 
@@ -42,7 +41,7 @@ U32 link_heap(Node* h, Node** R, U32* swaps); // log(N)
 Node* link(Node* t1, Node* t2); //O(1)
 Node* makechild(Node* w, Node* l); //O(1)
 void incrementSwaps(U32* swaps);
-    
+Node* delete_heap(Node* h);
 // template <class ElementType>
 // class HollowHeap {
     

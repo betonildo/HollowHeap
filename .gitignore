@@ -1,3 +1,6 @@
 # executables
 dijkstra
 dijkstra.exe
+signature.db
+signature.db-shm
+signature.db-wal

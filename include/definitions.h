@@ -1,7 +1,7 @@
+#include <climits>
+
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
-
-#include <climits>
 
 #define INF USHRT_MAX
 typedef unsigned int U32;

@@ -1,13 +1,14 @@
 #include "HollowHeap.h"
 
 Item* make_element(U32 vertice) {
-    Item* item = (Item*)malloc(sizeof(Item));
+    Item* item = (Item*)calloc(1, sizeof(Item));
     item->vertice = vertice;
+    item->node = NULL;
     return item;
 }
 
 Node* make_heap(Item* e, U32 key) {
-    Node* n = (Node*) malloc(sizeof(Node));
+    Node* n = (Node*) calloc(1, sizeof(Node));
     n->item = e;
     n->key = key;
     n->firstChild = NULL;
@@ -45,7 +46,7 @@ Node* decrease_key(Item* e, U32 key, Node* h, U32* swaps) {
     Node* v = make_heap(e, key);
     v->rank = MAX(0, u ? u->rank - 2 : 0);
 
-    if (u && u->rank >= 2) {
+    if (u && u->rank >= 2 && u->rank < INF) {
         v->firstChild = u->firstChild->nextSibling->nextSibling;
         u->firstChild->nextSibling->nextSibling = NULL;
     }
@@ -57,7 +58,7 @@ Node* decrease_key(Item* e, U32 key, Node* h, U32* swaps) {
 
 Node* delete_element(Item* e, Node* h) {
     if (e->node->item != NULL) {
-        // free(e->node->item);
+        free(e->node->item);
         e->node->item = NULL;
     }
 
@@ -72,7 +73,7 @@ Node* delete_min(Node* h) {
 
 Node* delete_min(Node* h, U32* swaps) {
     if (h == NULL) return NULL;
-    free(h->item);
+    //if (h->item != NULL) free(h->item);
     h->item = NULL;
     
     // M is defined following colorary
@@ -84,7 +85,7 @@ Node* delete_min(Node* h, U32* swaps) {
     
     Node** Roots = NULL;
     // Only reserve R if it will be used
-    if (M > 0) Roots = (Node**) malloc(sizeof(Node*) * M);
+    if (M > 0) Roots = (Node**) calloc(M, sizeof(Node*));
     // init all R's
     for (U32 i = 0; i < M; i++) Roots[i] = NULL;
     
@@ -140,6 +141,7 @@ U32 link_heap(Node* h, Node** R) {
     return link_heap(h, R, NULL);
 }
 
+//TODO: MUST RETURN NEW heap
 U32 link_heap(Node* h, Node** Roots, U32* swaps) {
     U32 newM = 0;
     // h is hollow
@@ -157,7 +159,7 @@ U32 link_heap(Node* h, Node** Roots, U32* swaps) {
         return newM;
     }
     // Roots that are not reserved yet or some node that was deleted DONT enter in this place
-    else if (Roots != NULL && h->rank < INF) {
+    else if (Roots != NULL && h != NULL && h->rank < INF) {
         U32 i = h->rank;
         while (Roots[i] != NULL) {
             // link with 
@@ -175,6 +177,7 @@ U32 link_heap(Node* h, Node** Roots, U32* swaps) {
 }
 
 Node* link(Node* t1, Node* t2) {
+
     if (t1->key <= t2->key)
         return makechild(t1, t2);
     else
@@ -190,4 +193,20 @@ Node* makechild(Node* w, Node* l) {
 
 void incrementSwaps(U32* swaps) {
     if (swaps) (*swaps) += 1;
+}
+
+Node* delete_heap(Node* h) {
+    if (h == NULL) return NULL;
+    
+    Node* next = h;
+    while(next != NULL) {
+        Node* toDelete = next;
+        next = next->nextSibling;
+        if (toDelete != NULL) {
+            delete_heap(toDelete->firstChild);
+            free(toDelete);
+        }
+    }
+
+    return NULL;
 }

@@ -5,7 +5,7 @@
 
 #define MAX(a, b) (a) < (b) ? (b) : (a)
 #define PHI ((1.0 + sqrt(5.0)) / 2.0)
-#define logBase(x, b) log((double)(x)) / log((double)(b))
+#define logBase(x, b) (log((double)(x)) / log((double)(b)))
 #define Make2Pot(x) {\
         double ___AXHOADISJDOJQWDQ_L = logBase((*x), 2); \
         double ___AXHAOSDJSODIJOQW_intpart; \

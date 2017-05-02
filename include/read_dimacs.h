@@ -5,15 +5,15 @@
 #include <iostream>
 #include <fstream>
 
-void read_dimacs(std::istream& in, Graph& g);
-void read_dimacs(char* path, Graph& g);
+void read_dimacs(std::istream& in, HollowHeap::Graph& g);
+void read_dimacs(char* path, HollowHeap::Graph& g);
 
-void read_dimacs(char* path, Graph& g) {
+void read_dimacs(char* path, HollowHeap::Graph& g) {
     std::ifstream f(path);
     read_dimacs(f, g);
 }
 
-void read_dimacs(std::istream& in, Graph& g) {
+void read_dimacs(std::istream& in, HollowHeap::Graph& g) {
     
     unsigned int n, m;
     std::string line="", dummy;
