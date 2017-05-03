@@ -7,6 +7,7 @@
 #include <iostream>
 #include "EdgeDistance.h"
 #include "HollowHeap.h"
+#include "memory_used.h"
 
 namespace HollowHeap {
 

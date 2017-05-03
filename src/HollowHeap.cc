@@ -1,5 +1,29 @@
 #include "HollowHeap.h"
 
+// jump for corruption search
+jmp_buf jump;
+
+void segv (int sig) {
+    longjmp (jump, 1); 
+}
+
+int memcheck (void *x) 
+{
+  volatile char c;
+  int illegal = 0;
+
+  signal (SIGSEGV, segv);
+
+  if (!setjmp (jump))
+    c = *(char *) (x);
+  else
+    illegal = 1;
+
+  signal (SIGSEGV, SIG_DFL);
+
+  return (illegal);
+}
+
 Item* make_element(U32 vertice) {
     Item* item = (Item*)calloc(1, sizeof(Item));
     item->vertice = vertice;
@@ -153,16 +177,17 @@ Node* link_heap(Node* h, Node** Roots, U32* removeCount, U32* swaps) {
             r = rn;
         }
         
-        if (h) free(h);
+        // if (h) free(h);
         h = NULL;
         return h;
     }
     // Roots that are not reserved yet or some node that was deleted DONT enter in this place
     else if (Roots != NULL && h != NULL && h->rank < INF) {
         U32 i = h->rank;
-        while (Roots[i] != NULL) {
-            // link with 
-            h = link(h, Roots[i]);
+        Node* cursorToRoot = Roots[i];
+        while (cursorToRoot != NULL && memcheck(cursorToRoot)) {
+            // link with
+            h = link(h, cursorToRoot);
             Roots[i] = NULL;
             i = i + 1;
             // increment swaps on each link, 

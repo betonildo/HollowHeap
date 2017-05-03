@@ -1,9 +1,16 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <setjmp.h>
+#include <signal.h>
 #include <chrono>
 
-#define MAX(a, b) (a) < (b) ? (b) : (a)
+#define MAX(a, b) ((a) < (b) ? (b) : (a))
+
+#define MIN(a, b) ((a) > (b) ? (b) : (a))
+
 #define PHI ((1.0 + sqrt(5.0)) / 2.0)
 #define logBase(x, b) (log((double)(x)) / log((double)(b)))
 #define Make2Pot(x) {\

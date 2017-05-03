@@ -32,8 +32,9 @@ namespace BinaryHeap {
             m_clearCounters();
 
             // instantiate distances calculated
-            EdgeDistance* distances = new EdgeDistance[m_numberOfElements];
-
+            // EdgeDistance* distances = new EdgeDistance[m_numberOfElements];
+            std::vector<EdgeDistance> distances;
+            distances.reserve(m_numberOfElements);
             // The distance to it self is 0
             distances[origin].distanceTo = 0;
             distances[origin].infinity = false;
@@ -41,10 +42,13 @@ namespace BinaryHeap {
             // if some over or under flow occurs, the distance is infinity
             if (dest == origin) {
                 EdgeDistance result = distances[dest];
-                delete[] distances;
+                // delete[] distances;
                 return result;
             }
-            if (dest >= m_numberOfElements || origin >= m_numberOfElements) return EdgeDistance();
+            if (dest >= m_numberOfElements || origin >= m_numberOfElements) {
+                // delete[] distances;
+                return EdgeDistance();
+            }
             
             // instantiate the heap and insert the vertice origin as starting point
             NHeap<Edge> edgesHeap(2);
@@ -87,8 +91,11 @@ namespace BinaryHeap {
                     }
                 }
             }
+
+            edgesHeap.clearTree();
+
             EdgeDistance result = distances[dest];
-            delete[] distances;
+            // delete[] distances;
             return result;
         }
 

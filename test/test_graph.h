@@ -1,15 +1,15 @@
+#ifndef DIJKSTRA_TEST
+#define DIJKSTRA_TEST
+
 #include "BinaryHeapGraph.h"
 #include "HollowHeapGraph.h"
 #include "utils.h"
 #include "definitions.h"
-
+#include "memory_used.h"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
 #include <math.h>
-
-#ifndef DIJKSTRA_TEST
-#define DIJKSTRA_TEST
 
 struct DijkstraTest {
 
@@ -21,10 +21,18 @@ struct DijkstraTest {
         outTimesBHFile << "# m x T /(n + m) log(n)" << std::endl;
         outIDUnmFile << "# inserts, deletes, updates" << std::endl;
 
+        const U32 MAX_I = 15;
         // fixed N        
-        U32 n = pow(2, 20);
+        U32 n = pow(2, MAX_I);
+        HollowHeap::Graph hhg;
+        hhg.setSize(n);
 
-        for (U32 i = 1; i < 20; i++) {
+        BinaryHeap::Graph bhg;
+        bhg.setSize(n);
+
+        U32 currentConnections = 0;
+
+        for (U32 i = 1; i <= MAX_I; i++) {
             
             // define M
             U32 m = pow(2, i);
@@ -32,25 +40,24 @@ struct DijkstraTest {
 
             // create and generate graphs
             std::cout << "Starting to generate a graph with n = " << n << " and m = " << m << std::endl;
-            HollowHeap::Graph hhg;
-            hhg.setSize(n);
-            generateGraph<HollowHeap::Graph>(hhg, n, m);
+            //generateGraph<HollowHeap::Graph>(hhg, n, m);
+            addConnectionsToGraph<HollowHeap::Graph>(hhg, n, currentConnections, m);
             U32 hhg_time = 0;
             
-            BinaryHeap::Graph bhg;
-            bhg.setSize(n);
-            generateGraph<BinaryHeap::Graph>(bhg, n, m);
+            // generateGraph<BinaryHeap::Graph>(bhg, n, m);
+            addConnectionsToGraph<BinaryHeap::Graph>(bhg, n, currentConnections, m);
             U32 bhg_time = 0;
             std::cout << "Finished generating graphs" << std::endl;
 
+            // set next iteration connections
+            currentConnections = m;
 
             // define search and time for elapsed time register
             U32 origin = -1;
             U32 dest = -1;
             
-            
             // define max iteration
-            U32 time_i_max = 30;
+            U32 time_i_max = 1;
 
             for(U32 time_i = 0; time_i < time_i_max; time_i++) {
 
@@ -63,20 +70,29 @@ struct DijkstraTest {
                 }
 
                 // measure time spent on search shortest path
-                std::cout << "Running binary heap dijkstra iteration " << time_i << "..." << std::endl;
                 U32 temp_time_measure = 0;
                 MeasureMS(&temp_time_measure, {
+                    // U32 mem_start = memory_used(false);
                     bhg.dijkstra(origin, dest);
+                    // U32 mem_end = memory_used(false);
+                    // std::cout << "Binary Heap Dijkstra:" << std::endl;
+                    // std::cout << "Memory Start: " << mem_start << std::endl;
+                    // std::cout << "Memory End  : " << mem_end   << std::endl;
+                    // std::cout << "Memory Used : " << MAX(mem_start, mem_end) - MIN(mem_start, mem_end) << std::endl;
                 });
-                std::cout << "Finished running binary heap  dijkstra and it took " << temp_time_measure << " ms" << std::endl;
                 bhg_time += temp_time_measure;
 
-                std::cout << "Running hollow heap dijkstra iteration " << time_i << "..." << std::endl;
                 temp_time_measure = 0;
                 MeasureMS(&temp_time_measure, {
+                    // U32 mem_start = memory_used(false);
                     hhg.dijkstra(origin, dest);
+                    // U32 mem_end = memory_used(false);
+                    // std::cout << "Hollow Heap Dijkstra:" << std::endl;
+                    // std::cout << "Memory Start: " << mem_start << std::endl;
+                    // std::cout << "Memory End  : " << mem_end   << std::endl;
+                    // std::cout << "Memory Used : " << MAX(mem_start, mem_end) - MIN(mem_start, mem_end) << std::endl;
                 });
-                std::cout << "Finished running hollow heap  dijkstra and it took " << temp_time_measure << " ms" << std::endl;
+                
                 hhg_time += temp_time_measure;
             }
 
@@ -102,10 +118,12 @@ struct DijkstraTest {
         outTimesBHFile << "# m x T /(n + m) log(n)" << std::endl;
         outIDUnmFile << "# inserts, deletes, updates" << std::endl;
 
-        // fixed M
-        U32 m = pow(2, 20);
+        const U32 MAX_I = 15;
 
-        for (U32 i = 11; i <= 20; i++) {
+        // fixed M
+        U32 m = pow(2, MAX_I);
+
+        for (U32 i = 11; i <= MAX_I; i++) {
             
             // define M
             U32 n = pow(2, i);
@@ -177,6 +195,23 @@ struct DijkstraTest {
         }
     }
  
+    template<typename Graph>
+    static inline void addConnectionsToGraph(Graph& g, U32 n, U32 oldM, U32 newM) {
+        std::srand(time(0));
+
+        U32 mem_start = memory_used(false);
+        for (U32 i = 1; i <= n; i++) {
+            for (U32 j = oldM; j <= n && j <= newM + 1; j++) {
+                if (i != j) g.set(i, j, std::rand() % 1000);
+            }
+        }
+
+        U32 mem_end = memory_used(false);
+        std::cout << "Graph:" << std::endl;
+        std::cout << "Memory Start: " << mem_start << std::endl;
+        std::cout << "Memory End  : " << mem_end   << std::endl;
+        std::cout << "Memory Used : " << MAX(mem_start, mem_end) - MIN(mem_start, mem_end) << std::endl;
+    }
 };
 
 #endif /*DIJKSTRA_TEST*/

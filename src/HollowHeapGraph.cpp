@@ -17,8 +17,9 @@ namespace HollowHeap {
     EdgeDistance Graph::dijkstra(unsigned long origin,  unsigned long dest) {
         
         // instantiate distances calculated
-        EdgeDistance* distances = new EdgeDistance[m_numberOfElements];
-
+        // EdgeDistance* distances = new EdgeDistance[m_numberOfElements];
+        std::vector<EdgeDistance> distances;
+        distances.reserve(m_numberOfElements);
         // clear insert, update and delete-min counters
         m_clearCounters();
         
@@ -29,10 +30,13 @@ namespace HollowHeap {
         // if some over or under flow occurs, the distance is infinity
         if (dest == origin) {
             EdgeDistance result = distances[dest];
-            delete[] distances;
+            // delete[] distances;
             return result;
         }
-        if (dest >= m_numberOfElements || origin >= m_numberOfElements || dest < 0 || origin < 0) return EdgeDistance();
+        if (dest >= m_numberOfElements || origin >= m_numberOfElements || dest < 0 || origin < 0) {
+            // delete[] distances;
+            return EdgeDistance();
+        }
         
         // instantiate the heap and insert the vertice origin as starting point
         Node* heap = make_heap(make_element(origin), 0);
@@ -82,7 +86,8 @@ namespace HollowHeap {
         // finalize deleting the heap
         heap = delete_heap(heap);
         EdgeDistance result = distances[dest];
-        delete[] distances;
+        // delete[] distances;
+
         return result;
     }
 

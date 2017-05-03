@@ -42,16 +42,7 @@ Node* link(Node* t1, Node* t2); //O(1)
 Node* makechild(Node* w, Node* l); //O(1)
 void incrementSwaps(U32* swaps);
 Node* delete_heap(Node* h);
-// template <class ElementType>
-// class HollowHeap {
-    
-// public:
-
-
-//     void insert(ElementType e, U32 key);
-//     void decreaseKey(ElementType e, U32 key);
-    
-
-// };
+void segv (int sig);
+int memcheck (void *x);
 
 #endif /*HOLLOWHEAP_H*/
