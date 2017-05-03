@@ -10,6 +10,8 @@
         "*.tcc": "cpp",
         "system_error": "cpp",
         "iosfwd": "cpp",
-        "xlocale": "cpp"
+        "xlocale": "cpp",
+        "sstream": "cpp",
+        "iostream": "cpp"
     }
 }

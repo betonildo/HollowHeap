@@ -16,27 +16,33 @@ namespace HollowHeap {
 
     EdgeDistance Graph::dijkstra(unsigned long origin,  unsigned long dest) {
         
+        // clear insert, update and delete-min counters
+        m_clearCounters();
+        U32 heigherVertice = m_getHeigherVertice();
+
         // instantiate distances calculated
         // EdgeDistance* distances = new EdgeDistance[m_numberOfElements];
         std::vector<EdgeDistance> distances;
-        distances.reserve(m_numberOfElements);
-        // clear insert, update and delete-min counters
-        m_clearCounters();
-        
-        // The distance to it self is 0
-        distances[origin].distanceTo = 0;
-        distances[origin].infinity = false;
-        
+        distances.resize(heigherVertice);
+
         // if some over or under flow occurs, the distance is infinity
         if (dest == origin) {
-            EdgeDistance result = distances[dest];
+            EdgeDistance result;
+            result.distanceTo = 0;
+            result.infinity = false;
+            result.visited = true;
             // delete[] distances;
             return result;
         }
-        if (dest >= m_numberOfElements || origin >= m_numberOfElements || dest < 0 || origin < 0) {
+        
+        if (dest > heigherVertice || origin > heigherVertice) {
             // delete[] distances;
             return EdgeDistance();
         }
+
+        // The distance to it self is 0
+        distances[origin].distanceTo = 0;
+        distances[origin].infinity = false;
         
         // instantiate the heap and insert the vertice origin as starting point
         Node* heap = make_heap(make_element(origin), 0);
@@ -105,5 +111,17 @@ namespace HollowHeap {
 
     void Graph::m_clearCounters() {
         n_inserts = n_deletes = n_updates = 0;
+    }
+
+    U32 Graph::m_getHeigherVertice() {
+        U32 heigher = 0;
+        for (auto& ve : m_graph) {
+            
+            if (ve.first > heigher) heigher = ve.first;
+            for (EdgeLink& e : ve.second) {
+                if (e.to > heigher) heigher = e.to;
+            }
+        }
+        return heigher;
     }
 };

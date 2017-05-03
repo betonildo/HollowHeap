@@ -13,8 +13,11 @@ int main(int argc, char** argv) {
     int dest = atoi(argv[2]);
 
     HollowHeap::Graph g;
-    if (argc > 3) read_dimacs(argv[3], g);
-    else read_dimacs(std::cin, g);
+    if (argc > 3) {
+        FILE* f = fopen(argv[3], "r");
+        read_dimacs(f, g);
+    }
+    else read_dimacs(stdin, g);
 
     U32 elapsed = 0;
     EdgeDistance ed;

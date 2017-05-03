@@ -1,42 +1,46 @@
 #ifndef READ_DIMACS_H
 #define READ_DIMACS_H
 
+#define BUFSIZE 1024
+
+#include "HollowHeapGraph.h"
+#include <cstring>
+#include <cstdlib>
+#include <fstream>
+#include <string>
 #include <sstream>
 #include <iostream>
-#include <fstream>
 
-void read_dimacs(std::istream& in, HollowHeap::Graph& g);
-void read_dimacs(char* path, HollowHeap::Graph& g);
+template<typename Graph>
+void read_dimacs(FILE* stream, Graph& g) {
 
-void read_dimacs(char* path, HollowHeap::Graph& g) {
-    std::ifstream f(path);
-    read_dimacs(f, g);
-}
-
-void read_dimacs(std::istream& in, HollowHeap::Graph& g) {
+    char buffer[BUFSIZE];
+    unsigned int n = 0, m = 0;
+    memset(buffer, 0, BUFSIZE);
+    std::string line = fgets(buffer, BUFSIZE, stream);
+    while (line.substr(0,4) != "p sp") {
+        memset(buffer, 0, BUFSIZE);
+        line = fgets(buffer, BUFSIZE, stream);        
+    }
     
-    unsigned int n, m;
-    std::string line="", dummy;
-    while (line.substr(0,4) != "p sp")
-        getline(in,line);
+    unsigned int size = line.length();
     
-    // (1) get nodes and edges
-    std::stringstream linestr;
-    linestr.str(line);
-    linestr >> dummy >> dummy >> n >> m;
+    memset(buffer, 0, BUFSIZE);
+    memcpy(buffer, line.c_str(), size);
+    char sp[3];
+    char s;
+    sscanf(buffer, "%c %s %d %d", &s, sp, &n, &m);
     g.setSize(n);
-    
-    unsigned i = 0;
+
+    unsigned int u, v, w;
+    unsigned int i = 0;
+
     while (i < m) {
         
-        getline(in, line);
-        
+        line = fgets(buffer, BUFSIZE, stream);
         if (line.substr(0,2) == "a ") {
-            std::stringstream arc(line);
-            unsigned u,v,w;
-            char ac;
-            arc >> ac >> u >> v >> w;
-            // std::cout << u << " " << v << " " << w << std::endl;
+            sscanf(buffer, "%c %d %d %d", &s, &u, &v, &w);
+            // std::cout << s << " " << u << " " << v << " " << w << std::endl;
             // processar arco (u,v) com peso w
             g.set(u, v, w);
             i++;

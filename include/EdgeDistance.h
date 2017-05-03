@@ -4,8 +4,9 @@
 #include <iostream>
 #include "definitions.h"
 
+#pragma pack(1)
 struct EdgeDistance {
-    U16 distanceTo : 16;
+    U32 distanceTo : 32;
     U8 visited : 1;
     U8 infinity : 1;
 

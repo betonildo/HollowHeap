@@ -2,9 +2,15 @@
 #include <fstream>
 #include "test_graph.h"
 #include "test_heap.h"
+#include <string>
+#include <sstream>
 #include <iostream>
 
+using std::string;
+using std::stringstream;
+
 int main(int argc, char** argv) {
+       
     std::string arg;
     arg.assign(argv[1]);
 
@@ -35,7 +41,14 @@ int main(int argc, char** argv) {
         std::ofstream dijkstra_timeshh_n("output/dijkstra_timeshh_n.dat");
         std::ofstream dijkstra_timesbh_n("output/dijkstra_timesbh_n.dat");
         std::ofstream dijkstra_IDUnm_n("output/dijkstra_IDUnm_n.dat");
-        DijkstraTest::testDijkstraVaringNFixedM(dijkstra_timeshh_n, dijkstra_timesbh_n, dijkstra_IDUnm_m);
+        DijkstraTest::testDijkstraVaringNFixedM(dijkstra_timeshh_n, dijkstra_timesbh_n, dijkstra_IDUnm_n);
+    }
+
+    if (arg == "dijkstra_ny_usa") {
+        const char* NYgraphPath = argv[2];
+        const char* USAgraphPath = argv[3];
+        std::ofstream dijkstra_ny_time_memory("output/dijkstra_ny_time_memory.dat");
+        DijkstraTest::testNYandUSAgraphs(dijkstra_ny_time_memory, NYgraphPath, USAgraphPath);
     }
 
     return 0;

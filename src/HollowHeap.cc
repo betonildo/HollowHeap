@@ -9,8 +9,8 @@ void segv (int sig) {
 
 int memcheck (void *x) 
 {
-  volatile char c;
-  int illegal = 0;
+  volatile char c = 0;
+  int illegal = c;
 
   signal (SIGSEGV, segv);
 
@@ -70,7 +70,7 @@ Node* decrease_key(Item* e, U32 key, Node* h, U32* swaps) {
     Node* v = make_heap(e, key);
     v->rank = MAX(0, u ? u->rank - 2 : 0);
 
-    if (u && u->rank >= 2 && u->rank < INF) {
+    if (u && memcheck(u) && u->rank >= 2 && u->rank < INF) {
         v->firstChild = u->firstChild->nextSibling->nextSibling;
         u->firstChild->nextSibling->nextSibling = NULL;
     }
@@ -182,7 +182,7 @@ Node* link_heap(Node* h, Node** Roots, U32* removeCount, U32* swaps) {
         return h;
     }
     // Roots that are not reserved yet or some node that was deleted DONT enter in this place
-    else if (Roots != NULL && h != NULL && h->rank < INF) {
+    else if (Roots != NULL && h != NULL && memcheck(h) && h->rank < INF) {
         U32 i = h->rank;
         Node* cursorToRoot = Roots[i];
         while (cursorToRoot != NULL && memcheck(cursorToRoot)) {

@@ -36,6 +36,9 @@ namespace HollowHeap {
         unsigned long n_updates;
 
         void m_clearCounters();
+
+    public:
+        U32 m_getHeigherVertice();
         
     };
 
