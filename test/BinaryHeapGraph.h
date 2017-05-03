@@ -8,6 +8,7 @@
 #include "Edge.h"
 #include "definitions.h"
 #include "EdgeDistance.h"
+#include "utils.h"
 
 namespace BinaryHeap {
     class Graph {
@@ -30,7 +31,7 @@ namespace BinaryHeap {
 
             // clear counters
             m_clearCounters();
-            U32 heigherVertice = m_getHeigherVertice();
+            U32 heigherVertice = MAX(m_getHeigherVertice() + 1, m_numberOfElements);
 
             // instantiate distances calculated
             EdgeDistance* distances = new EdgeDistance[heigherVertice + 1];

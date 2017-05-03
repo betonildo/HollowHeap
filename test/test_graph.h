@@ -59,8 +59,8 @@ struct DijkstraTest {
 
                 // define origin and destiny to search into the graph
                 while(origin == dest) {
-                    origin = std::rand() % n;
-                    dest = std::rand() % n;
+                    origin = std::rand() % m;
+                    dest = std::rand() % m;
                 }
 
                 // measure time spent on search shortest path
@@ -98,7 +98,7 @@ struct DijkstraTest {
         outTimesBHFile << "# n x T /(n + m) log(n)" << std::endl;
         outIDUnmFile << "# inserts, deletes, updates" << std::endl;
 
-        const U32 MAX_I = 24;
+        const U32 MAX_I = 30;
 
         // fixed M
         HollowHeap::Graph hhg;
@@ -113,9 +113,11 @@ struct DijkstraTest {
             U32 E = (n + m) * logBase(n, 2);
 
             // create and generate graphs
+            hhg.setSize(n);
             addNodesToGraph(hhg, nodeCounter, n, m);
             U32 hhg_time = 0;
 
+            bhg.setSize(n);
             addNodesToGraph(bhg, nodeCounter, n, m);
             U32 bhg_time = 0;
 
