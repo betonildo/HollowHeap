@@ -14,7 +14,7 @@
 #ifdef _WINDOWS
     #include <windows.h>
 #else
-    #include <sys/resource.h>
+    #include <unistd.h>
 #endif
 
 /// The amount of memory currently being used by this process, in bytes.

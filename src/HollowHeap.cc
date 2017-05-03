@@ -96,7 +96,7 @@ Node* delete_min(Node* h, U32* swaps) {
     
     do {
         Node* nextRoot = root->nextSibling;
-        numberOfHollowNodesRemoved += link_heap(root, Roots, swaps);
+        root = link_heap(root, Roots, &numberOfHollowNodesRemoved, swaps);
         root = nextRoot;
     }
     while(root != h && root != NULL);
@@ -137,26 +137,25 @@ Node* meld(Node* h1, Node* h2, U32* swaps) {
     else return h2;
 }
 
-U32 link_heap(Node* h, Node** R) {
-    return link_heap(h, R, NULL);
+Node* link_heap(Node* h, Node** R, U32* removeCount) {
+    return link_heap(h, R, removeCount, NULL);
 }
 
 //TODO: MUST RETURN NEW heap
-U32 link_heap(Node* h, Node** Roots, U32* swaps) {
-    U32 newM = 0;
+Node* link_heap(Node* h, Node** Roots, U32* removeCount, U32* swaps) {
     // h is hollow
     if (h->item == NULL) {
         
         Node* r = h->firstChild;
         while (r != NULL) {
             Node* rn = r->nextSibling;
-            newM += link_heap(r, Roots, swaps);
+            link_heap(r, Roots, removeCount, swaps);
             r = rn;
         }
         
         if (h) free(h);
         h = NULL;
-        return newM;
+        return h;
     }
     // Roots that are not reserved yet or some node that was deleted DONT enter in this place
     else if (Roots != NULL && h != NULL && h->rank < INF) {
@@ -173,7 +172,7 @@ U32 link_heap(Node* h, Node** Roots, U32* swaps) {
         Roots[i] = h;
     }
 
-    return newM;
+    return h;
 }
 
 Node* link(Node* t1, Node* t2) {

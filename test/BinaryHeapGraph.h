@@ -32,14 +32,18 @@ namespace BinaryHeap {
             m_clearCounters();
 
             // instantiate distances calculated
-            EdgeDistance distances[m_numberOfElements];
+            EdgeDistance* distances = new EdgeDistance[m_numberOfElements];
 
             // The distance to it self is 0
             distances[origin].distanceTo = 0;
             distances[origin].infinity = false;
 
             // if some over or under flow occurs, the distance is infinity
-            if (origin == dest) return distances[dest];
+            if (dest == origin) {
+                EdgeDistance result = distances[dest];
+                delete[] distances;
+                return result;
+            }
             if (dest >= m_numberOfElements || origin >= m_numberOfElements) return EdgeDistance();
             
             // instantiate the heap and insert the vertice origin as starting point
@@ -83,8 +87,9 @@ namespace BinaryHeap {
                     }
                 }
             }
-            
-            return distances[dest];
+            EdgeDistance result = distances[dest];
+            delete[] distances;
+            return result;
         }
 
         U32 getNumberOfInserts() {

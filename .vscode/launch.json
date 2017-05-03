@@ -41,7 +41,7 @@
             "name": "Execute Tests",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/test/execute_tests",
+            
             "args": ["dijkstra"],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
@@ -49,6 +49,7 @@
             "externalConsole": true,
             "linux": {
                 "MIMode": "gdb",
+                "program": "${workspaceRoot}/test/execute_tests",
                 "setupCommands": [
                     {
                         "description": "Enable pretty-printing for gdb",
@@ -61,6 +62,7 @@
                 "MIMode": "lldb"
             },
             "windows": {
+                "program": "${workspaceRoot}/test/execute_tests.exe",
                 "MIMode": "gdb",
                 "miDebuggerPath": "C:/Portables/mingw64/bin/gdb.exe",
                 "setupCommands": [

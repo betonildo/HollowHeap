@@ -31,6 +31,7 @@ struct DijkstraTest {
             U32 E = (n + m) * logBase(n, 2);
 
             // create and generate graphs
+            std::cout << "Starting to generate a graph with n = " << n << " and m = " << m << std::endl;
             HollowHeap::Graph hhg;
             hhg.setSize(n);
             generateGraph<HollowHeap::Graph>(hhg, n, m);
@@ -40,6 +41,8 @@ struct DijkstraTest {
             bhg.setSize(n);
             generateGraph<BinaryHeap::Graph>(bhg, n, m);
             U32 bhg_time = 0;
+            std::cout << "Finished generating graphs" << std::endl;
+
 
             // define search and time for elapsed time register
             U32 origin = -1;
@@ -55,21 +58,25 @@ struct DijkstraTest {
                 while(origin == dest) {
                     origin = std::rand() % n;
                     dest = std::rand() % n;
+
+                    std::cout << "Generating origin and destiny respectively " << origin << " and " << dest << std::endl;
                 }
 
                 // measure time spent on search shortest path
+                std::cout << "Running binary heap dijkstra iteration " << time_i << "..." << std::endl;
                 U32 temp_time_measure = 0;
                 MeasureMS(&temp_time_measure, {
                     bhg.dijkstra(origin, dest);
                 });
-
+                std::cout << "Finished running binary heap  dijkstra and it took " << temp_time_measure << " ms" << std::endl;
                 bhg_time += temp_time_measure;
 
+                std::cout << "Running hollow heap dijkstra iteration " << time_i << "..." << std::endl;
                 temp_time_measure = 0;
                 MeasureMS(&temp_time_measure, {
                     hhg.dijkstra(origin, dest);
                 });
-
+                std::cout << "Finished running hollow heap  dijkstra and it took " << temp_time_measure << " ms" << std::endl;
                 hhg_time += temp_time_measure;
             }
 
@@ -82,6 +89,8 @@ struct DijkstraTest {
             outTimesBHFile << m << " " << BHFT << std::endl;
             outIDUnmFile << "HH " << bhg.getNumberOfInserts() << " " << bhg.getNumberOfDeletes() << " " << bhg.getNumberOfUpdates() << std::endl;
             outIDUnmFile << "BH " << hhg.getNumberOfInserts() << " " << hhg.getNumberOfDeletes() << " " << hhg.getNumberOfUpdates() << std::endl;
+
+            std::cout << "Finished "<< i << " iteration" << std::endl;
         }
     }   
 
